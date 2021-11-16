@@ -97,8 +97,6 @@ struct kvm_debug_exit_arch {
 struct kvm_sync_regs {
   __u64 device_irq_level;
 };
-struct kvm_arch_memory_slot {
-};
 struct kvm_pmu_event_filter {
   __u16 base_event;
   __u16 nevents;
@@ -117,6 +115,15 @@ struct kvm_vcpu_events {
   } exception;
   __u32 reserved[12];
 };
+struct kvm_arm_copy_mte_tags {
+  __u64 guest_ipa;
+  __u64 length;
+  void __user * addr;
+  __u64 flags;
+  __u64 reserved[2];
+};
+#define KVM_ARM_TAGS_TO_GUEST 0
+#define KVM_ARM_TAGS_FROM_GUEST 1
 #define KVM_REG_ARM_COPROC_MASK 0x000000000FFF0000
 #define KVM_REG_ARM_COPROC_SHIFT 16
 #define KVM_REG_ARM_CORE (0x0010 << KVM_REG_ARM_COPROC_SHIFT)

@@ -166,6 +166,9 @@ enum {
 
     /** Capture event */
     AINPUT_EVENT_TYPE_CAPTURE = 4,
+
+    /** Drag event */
+    AINPUT_EVENT_TYPE_DRAG = 5,
 };
 
 /**
@@ -675,7 +678,7 @@ enum {
     /**
      * Axis constant: The movement of y position of a motion event.
      *
-     * Same as {@link RELATIVE_X}, but for y position.
+     * Same as {@link AMOTION_EVENT_AXIS_RELATIVE_X}, but for y position.
      */
     AMOTION_EVENT_AXIS_RELATIVE_Y = 28,
     /**
@@ -859,7 +862,7 @@ enum {
     /** HDMI */
     AINPUT_SOURCE_HDMI = 0x02000000 | AINPUT_SOURCE_CLASS_BUTTON,
     /** sensor */
-    AINPUT_SOURCE_SENSOR = 0x04000000 | AINPUT_SOURCE_UNKNOWN,
+    AINPUT_SOURCE_SENSOR = 0x04000000 | AINPUT_SOURCE_CLASS_NONE,
     /** rotary encoder */
     AINPUT_SOURCE_ROTARY_ENCODER = 0x00400000 | AINPUT_SOURCE_CLASS_NONE,
 
@@ -944,9 +947,10 @@ int32_t AInputEvent_getSource(const AInputEvent* event);
  * and {@link AMotionEvent_fromJava()}.
  * After returning, the specified AInputEvent* object becomes invalid and should no longer be used.
  * The underlying Java object remains valid and does not change its state.
+ *
+ * Available since API level 31.
  */
-
-void AInputEvent_release(const AInputEvent* event);
+void AInputEvent_release(const AInputEvent* event) __INTRODUCED_IN(31);
 
 /*** Accessors for key events only. ***/
 
@@ -998,8 +1002,10 @@ int64_t AKeyEvent_getEventTime(const AInputEvent* key_event);
  * Creates a native AInputEvent* object that is a copy of the specified Java android.view.KeyEvent.
  * The result may be used with generic and KeyEvent-specific AInputEvent_* functions. The object
  * returned by this function must be disposed using {@link AInputEvent_release()}.
+ *
+ * Available since API level 31.
  */
-const AInputEvent* AKeyEvent_fromJava(JNIEnv* env, jobject keyEvent);
+const AInputEvent* AKeyEvent_fromJava(JNIEnv* env, jobject keyEvent) __INTRODUCED_IN(31);
 
 /*** Accessors for motion events only. ***/
 
@@ -1321,8 +1327,10 @@ float AMotionEvent_getHistoricalAxisValue(const AInputEvent* motion_event,
  * android.view.MotionEvent. The result may be used with generic and MotionEvent-specific
  * AInputEvent_* functions. The object returned by this function must be disposed using
  * {@link AInputEvent_release()}.
+ *
+ * Available since API level 31.
  */
-const AInputEvent* AMotionEvent_fromJava(JNIEnv* env, jobject motionEvent);
+const AInputEvent* AMotionEvent_fromJava(JNIEnv* env, jobject motionEvent) __INTRODUCED_IN(31);
 
 struct AInputQueue;
 /**

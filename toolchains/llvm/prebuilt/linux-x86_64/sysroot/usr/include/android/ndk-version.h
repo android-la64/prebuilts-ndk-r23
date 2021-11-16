@@ -18,7 +18,7 @@
  *
  * For example: 0 for r16 and 1 for r16b.
  */
-#define __NDK_MINOR__ 0
+#define __NDK_MINOR__ 1
 
 /**
  * Set to 0 if this is a release build, or 1 for beta 1,
@@ -31,9 +31,9 @@
  *
  * For a local development build of the NDK, this is -1.
  */
-#define __NDK_BUILD__ 7243079
+#define __NDK_BUILD__ 7779620
 
 /**
  * Set to 1 if this is a canary build, 0 if not.
  */
-#define __NDK_CANARY__ 1
+#define __NDK_CANARY__ 0

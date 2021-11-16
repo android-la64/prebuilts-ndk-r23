@@ -22,6 +22,7 @@
 #include <linux/ioctl.h>
 #define KVM_PIO_PAGE_OFFSET 1
 #define KVM_COALESCED_MMIO_PAGE_OFFSET 2
+#define KVM_DIRTY_LOG_PAGE_OFFSET 64
 #define DE_VECTOR 0
 #define DB_VECTOR 1
 #define BP_VECTOR 3
@@ -110,6 +111,7 @@ struct kvm_ioapic_state {
 #define KVM_IRQCHIP_IOAPIC 2
 #define KVM_NR_IRQCHIPS 3
 #define KVM_RUN_X86_SMM (1 << 0)
+#define KVM_RUN_X86_BUS_LOCK (1 << 1)
 struct kvm_regs {
   __u64 rax, rbx, rcx, rdx;
   __u64 rsi, rdi, rsp, rbp;
@@ -144,6 +146,17 @@ struct kvm_sregs {
   __u64 apic_base;
   __u64 interrupt_bitmap[(KVM_NR_INTERRUPTS + 63) / 64];
 };
+struct kvm_sregs2 {
+  struct kvm_segment cs, ds, es, fs, gs, ss;
+  struct kvm_segment tr, ldt;
+  struct kvm_dtable gdt, idt;
+  __u64 cr0, cr2, cr3, cr4, cr8;
+  __u64 efer;
+  __u64 apic_base;
+  __u64 flags;
+  __u64 pdptrs[4];
+};
+#define KVM_SREGS2_FLAGS_PDPTRS_VALID 1
 struct kvm_fpu {
   __u8 fpr[8][16];
   __u16 fcw;
@@ -357,6 +370,7 @@ struct kvm_vmx_nested_state_hdr {
   struct {
     __u16 flags;
   } smm;
+  __u16 pad;
   __u32 flags;
   __u64 preemption_timer_deadline;
 };

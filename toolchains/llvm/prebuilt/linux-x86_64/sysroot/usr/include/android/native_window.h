@@ -157,6 +157,7 @@ int32_t ANativeWindow_getFormat(ANativeWindow* window);
  * For all of these parameters, if 0 is supplied then the window's base
  * value will come back in force.
  *
+ * \param window pointer to an ANativeWindow object.
  * \param width width of the buffers in pixels.
  * \param height height of the buffers in pixels.
  * \param format one of the AHardwareBuffer_Format constants.
@@ -191,6 +192,7 @@ int32_t ANativeWindow_unlockAndPost(ANativeWindow* window);
  *
  * Available since API level 26.
  *
+ * \param window pointer to an ANativeWindow object.
  * \param transform combination of {@link ANativeWindowTransform} flags
  * \return 0 for success, or -EINVAL if \p transform is invalid
  */
@@ -208,6 +210,7 @@ int32_t ANativeWindow_setBuffersTransform(ANativeWindow* window, int32_t transfo
  *
  * Available since API level 28.
  *
+ * \param window pointer to an ANativeWindow object.
  * \param dataSpace data space of all buffers queued after this call.
  * \return 0 for success, -EINVAL if window is invalid or the dataspace is not
  * supported.
@@ -247,9 +250,10 @@ enum ANativeWindow_FrameRateCompatibility {
 };
 
 /**
- * Same as ANativeWindow_setFrameRateWithSeamlessness(window, frameRate, compatibility, true).
+ * Same as ANativeWindow_setFrameRateWithChangeStrategy(window, frameRate, compatibility,
+ * ANATIVEWINDOW_CHANGE_FRAME_RATE_ONLY_IF_SEAMLESS).
  *
- * See ANativeWindow_setFrameRateWithSeamlessness().
+ * See ANativeWindow_setFrameRateWithChangeStrategy().
  *
  * Available since API level 30.
  */
@@ -267,6 +271,19 @@ int32_t ANativeWindow_setFrameRate(ANativeWindow* window, float frameRate, int8_
  */
 void ANativeWindow_tryAllocateBuffers(ANativeWindow* window) __INTRODUCED_IN(30);
 
+/** Change frame rate strategy value for ANativeWindow_setFrameRate. */
+enum ANativeWindow_ChangeFrameRateStrategy {
+    /**
+     * Change the frame rate only if the transition is going to be seamless.
+     */
+    ANATIVEWINDOW_CHANGE_FRAME_RATE_ONLY_IF_SEAMLESS = 0,
+    /**
+     * Change the frame rate even if the transition is going to be non-seamless,
+     * i.e. with visual interruptions for the user.
+     */
+    ANATIVEWINDOW_CHANGE_FRAME_RATE_ALWAYS = 1
+} __INTRODUCED_IN(31);
+
 /**
  * Sets the intended frame rate for this window.
  *
@@ -283,7 +300,12 @@ void ANativeWindow_tryAllocateBuffers(ANativeWindow* window) __INTRODUCED_IN(30)
  * this ANativeWindow is consumed by something other than the system compositor,
  * e.g. a media codec, this call has no effect.
  *
+ * You can register for changes in the refresh rate using
+ * \a AChoreographer_registerRefreshRateCallback.
+ *
  * Available since API level 31.
+ *
+ * \param window pointer to an ANativeWindow object.
  *
  * \param frameRate The intended frame rate of this window, in frames per
  * second. 0 is a special value that indicates the app will accept the system's
@@ -295,18 +317,20 @@ void ANativeWindow_tryAllocateBuffers(ANativeWindow* window) __INTRODUCED_IN(30)
  * \param compatibility The frame rate compatibility of this window. The
  * compatibility value may influence the system's choice of display refresh
  * rate. See the ANATIVEWINDOW_FRAME_RATE_COMPATIBILITY_* values for more info.
+ * This parameter is ignored when frameRate is 0.
  *
- * \param shouldBeSeamless Whether display refresh rate transitions should be seamless. A
- * seamless transition is one that doesn't have any visual interruptions, such as a black
- * screen for a second or two. True indicates that any frame rate changes caused by this
- * request should be seamless. False indicates that non-seamless refresh rates are also
- * acceptable.
+ * \param changeFrameRateStrategy Whether display refresh rate transitions caused by this
+ * window should be seamless.
+ * A seamless transition is one that doesn't have any visual interruptions, such as a black
+ * screen for a second or two. See the ANATIVEWINDOW_CHANGE_FRAME_RATE_* values.
+ * This parameter is ignored when frameRate is 0.
  *
  * \return 0 for success, -EINVAL if the window, frame rate, or compatibility
  * value are invalid.
  */
-int32_t ANativeWindow_setFrameRateWithSeamlessness(ANativeWindow* window, float frameRate,
-        int8_t compatibility, bool shouldBeSeamless) __INTRODUCED_IN(31);
+int32_t ANativeWindow_setFrameRateWithChangeStrategy(ANativeWindow* window, float frameRate,
+        int8_t compatibility, int8_t changeFrameRateStrategy)
+        __INTRODUCED_IN(31);
 
 #ifdef __cplusplus
 };

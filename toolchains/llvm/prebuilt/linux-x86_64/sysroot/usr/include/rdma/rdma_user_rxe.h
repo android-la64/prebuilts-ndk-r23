@@ -78,13 +78,13 @@ struct rxe_send_wr {
       __u16 pkey_index;
     } ud;
     struct {
-      union {
-        struct ib_mr * mr;
-        __aligned_u64 reserved;
-      };
-      __u32 key;
+      __aligned_u64 addr;
+      __aligned_u64 length;
+      __u32 mr_lkey;
+      __u32 mw_rkey;
+      __u32 rkey;
       __u32 access;
-    } reg;
+    } mw;
   } wr;
 };
 struct rxe_sge {
@@ -146,5 +146,15 @@ struct rxe_create_srq_resp {
 };
 struct rxe_modify_srq_cmd {
   __aligned_u64 mmap_info_addr;
+};
+struct rxe_queue_buf {
+  __u32 log2_elem_size;
+  __u32 index_mask;
+  __u32 pad_1[30];
+  __u32 producer_index;
+  __u32 pad_2[31];
+  __u32 consumer_index;
+  __u32 pad_3[31];
+  __u8 data[];
 };
 #endif

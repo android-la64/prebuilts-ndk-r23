@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef _UAPI_LINUX_ETHTOOL_H
 #define _UAPI_LINUX_ETHTOOL_H
-#include <linux/kernel.h>
+#include <linux/const.h>
 #include <linux/types.h>
 #include <linux/if_ether.h>
 #include <limits.h>
@@ -255,6 +255,11 @@ enum ethtool_stringset {
   ETH_SS_TS_TX_TYPES,
   ETH_SS_TS_RX_FILTERS,
   ETH_SS_UDP_TUNNEL_TYPES,
+  ETH_SS_STATS_STD,
+  ETH_SS_STATS_ETH_PHY,
+  ETH_SS_STATS_ETH_MAC,
+  ETH_SS_STATS_ETH_CTRL,
+  ETH_SS_STATS_RMON,
   ETH_SS_COUNT
 };
 struct ethtool_gstrings {
