@@ -313,6 +313,65 @@ typedef struct ucontext {
   struct _libc_fpstate __fpregs_mem;
 } ucontext_t;
 
+#elif defined(__loongarch__)
+
+#define LARCH_NGREG 32
+
+#if defined(__USE_GNU)
+
+enum {
+  LARCH_REG_RA = 1,
+#define LARCH_REG_RA LARCH_REG_RA
+  LARCH_REG_SP = 3,
+#define LARCH_REG_SP LARCH_REG_SP
+  LARCH_REG_A0 = 4,
+#define LARCH_REG_A0 LARCH_REG_A0
+  LARCH_REG_S0 = 23,
+#define LARCH_REG_S0 LARCH_REG_S0
+  LARCH_REG_S1 = 24,
+#define LARCH_REG_S1 LARCH_REG_S1
+  LARCH_REG_S2 = 25,
+#define LARCH_REG_S2 LARCH_REG_S2
+  LARCH_REG_NARGS = 8,
+#define LARCH_REG_NARGS LARCH_REG_NARGS
+};
+
+#endif // defined(__USE_GNU)
+
+typedef unsigned long int greg_t;
+/* Container for all general registers.  */
+typedef greg_t gregset_t[32];
+
+typedef struct
+{
+  unsigned long long __pc;
+  unsigned long long __gregs[32];
+  unsigned int __flags;
+  unsigned long long __extcontext[0] __attribute__((__aligned__(16)));
+} mcontext_t;
+
+/* Userlevel context.  */
+typedef struct ucontext_t
+{
+  unsigned long int __uc_flags;
+  struct ucontext *uc_link;
+  stack_t uc_stack;
+  union {
+    sigset_t uc_sigmask;
+    sigset64_t uc_sigmask64;
+  };
+  /* The kernel adds extra padding after uc_sigmask to match glibc sigset_t on LoongArch64. */
+  char __padding[128 - sizeof(sigset_t)];
+  mcontext_t uc_mcontext;
+} ucontext_t;
+
+// best use the following
+// #include <asm/sigcontext.h>
+// typedef struct sigcontext mcontext_t;
+//
+// #include <asm/ucontext.h>
+// typedef struct ucontext ucontext_t;
+
 #endif
 
 __END_DECLS

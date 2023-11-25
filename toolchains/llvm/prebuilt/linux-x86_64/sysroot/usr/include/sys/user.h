@@ -233,6 +233,34 @@ struct user_fpsimd_struct {
   uint32_t fpcr;
 };
 
+#elif __riscv_xlen == 64
+struct user_gregs_struct {
+  uint64_t regs[32];
+  uint64_t pc;
+  uint64_t psr;
+};
+
+struct user_fpregs_struct {
+  __uint128_t vregs[32];
+  uint32_t fpsr;
+};
+
+#elif defined(__loongarch__)
+// XC-TODO: from bionic, may NOT corerct for name?
+struct user_regs_struct
+{
+  uint64_t gpr[32];
+  uint64_t pc;
+  uint64_t badvaddr;
+  uint64_t reserved[11];
+};
+
+struct user_fp_struct {
+  uint64_t    fpr[32];
+  uint64_t    fcc;
+  uint32_t    fcsr;
+};
+
 #else
 
 #error "Unsupported architecture."
